@@ -1,0 +1,8 @@
+$kind: http-request
+description: ""
+url: http://127.0.0.1:8000/api/buku/1
+method: DELETE
+headers:
+  Accept: "\tapplication/json"
+  Content-Type: "\tapplication/json"
+order: 5000

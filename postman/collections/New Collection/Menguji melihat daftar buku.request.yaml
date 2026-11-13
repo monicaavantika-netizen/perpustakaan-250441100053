@@ -1,0 +1,21 @@
+$kind: http-request
+description: ""
+url: http://127.0.0.1:8000/api/buku
+method: GET
+headers:
+  Accept: "\tapplication/json"
+  Content-Type: "\tapplication/json"
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"admin@bookavy.com\",\r
+
+    \    \"password\": \"admin12345\"\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: HDR9sAkUKnreGToF5ht5e1I2XnbSPkQYGt1pA41be1d4b4f7
+order: 3000

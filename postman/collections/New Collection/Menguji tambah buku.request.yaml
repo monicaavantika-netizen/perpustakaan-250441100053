@@ -1,0 +1,31 @@
+$kind: http-request
+description: ""
+url: http://127.0.0.1:8000/api/buku
+method: POST
+headers:
+  - key: Content-Type
+    value: application/json
+    disabled: false
+    description: ""
+  - key: Content-Type
+    value: application/json
+    disabled: false
+    description: ""
+body:
+  type: json
+  content: "{\r
+
+    \    \"kategori_id\": 1,\r
+
+    \    \"judul\": \"Pemrograman Laravel\",\r
+
+    \    \"penulis\": \"Andi Saputra\",\r
+
+    \    \"tahun_terbit\": 2025\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: HDR9sAkUKnreGToF5ht5e1I2XnbSPkQYGt1pA41be1d4b4f7
+order: 2000

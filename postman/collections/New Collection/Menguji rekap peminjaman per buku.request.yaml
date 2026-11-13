@@ -1,0 +1,21 @@
+$kind: http-request
+description: ""
+url: http://127.0.0.1:8000/api/buku
+method: POST
+headers:
+  Accept: "\tapplication/json"
+  Content-Type: "\tapplication/json"
+body:
+  type: json
+  content: "{\r
+
+    \  \"kategori_id\": 2,\r
+
+    \  \"judul\": 12345,\r
+
+    \  \"penulis\": \"Monica Putri\",\r
+
+    \  \"tahun_terbit\": 2025\r
+
+    }"
+order: 6000
