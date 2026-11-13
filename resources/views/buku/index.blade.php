@@ -58,7 +58,6 @@
                 </p>
             </div>
 
-            <!-- Tambah Buku: hanya admin dan petugas -->
             @can('kelola-buku')
                 <a href="{{ route('buku.create') }}"
                    class="rounded-xl px-5 py-3 text-sm font-bold text-white shadow transition hover:opacity-90"
@@ -123,13 +122,9 @@
                                 <td class="px-4 py-4 font-semibold"
                                     style="color: #741d3c;">
 
-                                    <!-- {{--
-                                     KODE SEBELUM PERBAIKAN A1:
-                                     {!! $item->judul !!}
-                                    --}} -->
+                                    {{-- KODE SEBELUM PERBAIKAN A1 --}}
+                                    {!! $item->judul !!}
 
-                                    {{-- KODE SESUDAH PERBAIKAN A1 --}}
-                                    {{ $item->judul }}
                                 </td>
 
                                 <td class="px-4 py-4">
@@ -154,25 +149,24 @@
                                             Detail
                                         </a>
 
-                                        <!-- Edit dan Hapus -->
                                         @can('kelola-buku')
 
+                                            <!-- Edit -->
                                             <a href="{{ route('buku.edit', $item->id) }}"
                                                class="rounded-lg px-3 py-2 text-xs font-bold text-white"
                                                style="background: #a83c60;">
                                                 Edit
                                             </a>
 
-                                            <!-- {{--
-                                            KODE SEBELUM PERBAIKAN A3:
+                                            {{-- KODE SEBELUM PERBAIKAN A3:
                                             <a href="{{ route('buku.hapus.get', $item->id) }}"
-                                                class="rounded-lg px-3 py-2 text-xs font-bold text-white"
-                                                style="background: #b42335;">
-                                                 Hapus
-                                             </a>
-                                            --}} -->
+                                               class="rounded-lg px-3 py-2 text-xs font-bold text-white"
+                                               style="background: #b42335;">
+                                                Hapus
+                                            </a>
+                                            --}}
 
-                                            {{-- KODE SETELAH PERBAIKAN A3 --}}
+                                            <!-- Hapus menggunakan DELETE -->
                                             <form action="{{ route('buku.destroy', $item->id) }}"
                                                   method="POST"
                                                   onsubmit="return confirm('Yakin ingin menghapus buku ini?')">

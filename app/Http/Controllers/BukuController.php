@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers;
@@ -38,28 +37,12 @@ class BukuController extends Controller
     }
 
     // A2: KODE SEBELUM PERBAIKAN (RENTAN SQL INJECTION)
-    /*
-    # public function cari(Request $request)
-    # {
-    #     $judul = $request->query('judul');
-    #
-    #     $buku = DB::select(
-    #         "SELECT * FROM bukus WHERE judul = '$judul'"
-    #     );
-    #
-    #     return response()->json($buku);
-    # }
-    */
-
-    // A2: KODE SETELAH PERBAIKAN
-    // Menggunakan parameter binding untuk mencegah SQL Injection
     public function cari(Request $request)
     {
         $judul = $request->query('judul');
 
         $buku = DB::select(
-            'SELECT * FROM bukus WHERE judul = ?',
-            [$judul]
+            "SELECT * FROM bukus WHERE judul = '$judul'"
         );
 
         return response()->json($buku);

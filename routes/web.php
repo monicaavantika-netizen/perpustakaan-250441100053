@@ -1,5 +1,4 @@
-
-<?php
+ <?php
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
@@ -150,7 +149,6 @@ Route::middleware(['auth', 'can:kelola-buku'])->group(function () {
         ->whereNumber('id')
         ->name('buku.update');
 
-    // A3: KODE SETELAH PERBAIKAN
     // Penghapusan buku menggunakan metode DELETE
     Route::delete('/buku/{id}', [BukuController::class, 'destroy'])
         ->whereNumber('id')
@@ -168,16 +166,14 @@ Route::middleware('auth')->group(function () {
 
 
 // A3: KODE SEBELUM PERBAIKAN (RENTAN CSRF)
-/*
-# Route::middleware('auth')->group(function () {
-#
-#     Route::get('/buku/{buku}/hapus', [
-#         BukuController::class,
-#         'destroy'
-#     ])->whereNumber('buku')->name('buku.hapus.get');
-#
-# });
-*/
+Route::middleware('auth')->group(function () {
+
+    Route::get('/buku/{buku}/hapus', [
+        BukuController::class,
+        'destroy'
+    ])->whereNumber('buku')->name('buku.hapus.get');
+
+});
 
 
 // Detail Peminjaman dengan Policy
