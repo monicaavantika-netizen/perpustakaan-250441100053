@@ -1,4 +1,4 @@
- <?php
+<?php
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
@@ -116,21 +116,30 @@ Route::middleware(['auth', 'role:siswa'])
         ])->name('peminjaman.store');
     });
 
-
-// Daftar Buku dan Pencarian Buku
+// SOAL 1 - A2: SQL INJECTION
+// Route pencarian buku menggunakan middleware auth.
 Route::middleware('auth')->group(function () {
 
     Route::get('/buku', [BukuController::class, 'index'])
         ->name('buku.index');
 
-    // A2: Route pencarian untuk pengujian SQL Injection
     Route::get('/buku-cari', [BukuController::class, 'cari'])
         ->name('buku.cari');
 });
 
 
-// Pengelolaan Buku Admin dan Petugas
-// Menggunakan Gate kelola-buku
+// SOAL 3: PENGUATAN GATE KELola-BUKU
+// KODE SEBELUM PERBAIKAN:
+// Pemeriksaan role dilakukan langsung pada route.
+Route::middleware(['auth', 'role:admin|petugas'])->group(function () {
+    Route::get('/buku/create', [BukuController::class, 'create'])
+        ->name('buku.create');
+});
+
+
+// KODE SESUDAH PERBAIKAN:
+// Pemeriksaan akses pengelolaan buku dipusatkan pada Gate.
+// Admin dan petugas yang boleh mengelola buku.
 Route::middleware(['auth', 'can:kelola-buku'])->group(function () {
 
     // Tambah Buku
@@ -164,19 +173,18 @@ Route::middleware('auth')->group(function () {
         ->name('buku.show');
 });
 
+// SOAL 1 - A3: KODE SEBELUM PERBAIKAN (RENTAN CSRF)
+// Route GET dapat menghapus buku.
 
-// A3: KODE SEBELUM PERBAIKAN (RENTAN CSRF)
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
+//     Route::get('/buku/{buku}/hapus', [
+//         BukuController::class,
+//         'destroy'
+//     ])->whereNumber('buku')->name('buku.hapus.get');
+// });
 
-    Route::get('/buku/{buku}/hapus', [
-        BukuController::class,
-        'destroy'
-    ])->whereNumber('buku')->name('buku.hapus.get');
-
-});
-
-
-// Detail Peminjaman dengan Policy
+// SOAL 1 - A4: IDOR DAN PENERAPAN POLICY
+// Route detail peminjaman menggunakan middleware auth.
 Route::middleware('auth')->group(function () {
 
     Route::get('/peminjaman/{id}', [
@@ -198,5 +206,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 });
+
+
+// SOAL 5a: PENGUJIAN APP_DEBUG=false
+// Route sementara hanya untuk pengujian.
+// Setelah diuji, route harus dihapus atau dikomentari.
+Route::get('/uji-error', function () {
+    throw new RuntimeException('Pengujian error aplikasi');
+});
+
+// SOAL 5c: PENGGANTIAN PASSWORD ADMIN
+// Perintah dijalankan melalui php artisan tinker,
+// bukan dimasukkan sebagai kode aktif di web.php.
+// use App\Models\User;
+// use Illuminate\Support\Facades\Hash;
+
+// User::where('email', 'admin@bookavy.com')->update([
+//     'password' => Hash::make('adminbookavy')
+// ]);
 
 require __DIR__ . '/auth.php';

@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Buku;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+// hapus jika sudah tidak dipakai gatenya soal 3
+// use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 
 class BukuController extends Controller
@@ -36,14 +37,19 @@ class BukuController extends Controller
         return view('buku.show', compact('buku'));
     }
 
-    // A2: KODE SEBELUM PERBAIKAN (RENTAN SQL INJECTION)
+    // Soal 1 A2: KODE SEBELUM PERBAIKAN (RENTAN SQL INJECTION)
     public function cari(Request $request)
     {
         $judul = $request->query('judul');
 
+        // $buku = DB::select(
+        //     "SELECT * FROM bukus WHERE judul = '$judul'"
+        // );
+        //  Soal 2 A2: KODE BENAR (SUDAH DIPERBAIKI)
         $buku = DB::select(
-            "SELECT * FROM bukus WHERE judul = '$judul'"
-        );
+            'SELECT * FROM bukus WHERE judul = ?',
+            [$judul]
+            );
 
         return response()->json($buku);
     }
@@ -51,7 +57,9 @@ class BukuController extends Controller
     // Menampilkan form tambah buku
     public function create()
     {
-        Gate::authorize('kelola-buku');
+        // soal no 3 tinggal komen lakukan juga di
+        // store(), edit(), update(), dan destroy().
+        // Gate::authorize('kelola-buku');
 
         $kategori = Kategori::all();
 
@@ -61,7 +69,7 @@ class BukuController extends Controller
     // Menyimpan buku baru
     public function store(Request $request)
     {
-        Gate::authorize('kelola-buku');
+        // Gate::authorize('kelola-buku');
 
         $validated = $request->validate([
             'kategori_id' => 'required|exists:kategoris,id',
@@ -79,7 +87,7 @@ class BukuController extends Controller
     // Menampilkan form edit buku
     public function edit($id)
     {
-        Gate::authorize('kelola-buku');
+        // Gate::authorize('kelola-buku');
 
         $buku = Buku::findOrFail($id);
         $kategori = Kategori::all();
@@ -90,7 +98,7 @@ class BukuController extends Controller
     // Memperbarui data buku
     public function update(Request $request, $id)
     {
-        Gate::authorize('kelola-buku');
+        // Gate::authorize('kelola-buku');
 
         $validated = $request->validate([
             'kategori_id' => 'required|exists:kategoris,id',
@@ -109,7 +117,7 @@ class BukuController extends Controller
     // Menghapus buku
     public function destroy($id)
     {
-        Gate::authorize('kelola-buku');
+        // Gate::authorize('kelola-buku');
 
         $buku = Buku::findOrFail($id);
         $buku->delete();

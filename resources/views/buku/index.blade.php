@@ -10,110 +10,68 @@
 
         <!-- Banner -->
         <div class="mb-8 rounded-3xl p-8 text-white shadow-xl"
-             style="background: linear-gradient(120deg, #4b1029, #8e294d, #c45b7c);">
+             style="background: linear-gradient(135deg, #741d3c, #a8325a);">
 
-            <p class="mb-3 text-sm font-semibold uppercase tracking-widest"
-               style="color: #f8cbd8;">
-                BOOKAVY DIGITAL LIBRARY
-            </p>
+            <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+                <div>
+                    <p class="mb-2 text-sm font-medium tracking-wider text-pink-100">
+                        BOOKAVY LIBRARY
+                    </p>
 
-            <h1 class="mb-3 text-3xl font-extrabold sm:text-4xl">
-                Temukan Buku Favoritmu
-            </h1>
+                    <h1 class="text-3xl font-bold sm:text-4xl">
+                        Koleksi Buku
+                    </h1>
 
-            <p class="max-w-2xl text-sm leading-relaxed text-pink-100">
-                Jelajahi koleksi buku Bookavy dan temukan berbagai
-                pengetahuan baru melalui setiap halaman.
-            </p>
+                    <p class="mt-3 text-sm text-pink-100">
+                        Temukan dan kelola berbagai koleksi buku di Bookavy.
+                    </p>
+                </div>
 
-            <div class="mt-6 inline-block rounded-2xl px-6 py-4"
-                 style="background: rgba(255,255,255,0.15);">
-
-                <p class="text-xs font-semibold uppercase tracking-wider text-pink-100">
-                    Jumlah Koleksi Buku
-                </p>
-
-                <p class="mt-1 text-2xl font-extrabold">
-                    {{ $buku->total() }} Buku
-                </p>
+                {{-- SOAL 3: Tombol tambah hanya untuk admin dan petugas --}}
+                @can('kelola-buku')
+                    <a href="{{ route('buku.create') }}"
+                       class="inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold text-white shadow-md transition hover:opacity-90"
+                       style="background-color: #d96b91;">
+                        + Tambah Buku
+                    </a>
+                @endcan
             </div>
         </div>
-
-        <!-- Judul Koleksi -->
-        <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-
-            <div>
-                <p class="text-xs font-bold uppercase tracking-widest"
-                   style="color: #a83c60;">
-                    LAYANAN PERPUSTAKAAN
-                </p>
-
-                <h2 class="mt-2 text-2xl font-extrabold"
-                    style="color: #4b1029;">
-                    Bookavy Library
-                </h2>
-
-                <p class="mt-1 text-sm text-gray-600">
-                    Daftar koleksi buku yang tersedia.
-                </p>
-            </div>
-
-            @can('kelola-buku')
-                <a href="{{ route('buku.create') }}"
-                   class="rounded-xl px-5 py-3 text-sm font-bold text-white shadow transition hover:opacity-90"
-                   style="background: #741d3c;">
-                    + Tambah Buku
-                </a>
-            @endcan
-
-        </div>
-
-        <!-- Pesan Berhasil -->
-        @if(session('success'))
-            <div class="mb-5 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-700">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <!-- Pesan Error -->
-        @if($errors->any())
-            <div class="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                {{ $errors->first() }}
-            </div>
-        @endif
 
         <!-- Tabel Buku -->
-        <div class="overflow-hidden rounded-3xl border border-pink-100 bg-white shadow-lg">
+        <div class="overflow-hidden rounded-3xl bg-white shadow-xl">
 
-            <div class="border-b border-pink-100 p-6">
-                <h3 class="text-xl font-extrabold"
-                    style="color: #4b1029;">
-                    Koleksi Buku
-                </h3>
+            <div class="border-b px-6 py-5"
+                 style="border-color: #f3d5df;">
+
+                <h2 class="text-xl font-bold"
+                    style="color: #741d3c;">
+                    Daftar Buku
+                </h2>
 
                 <p class="mt-1 text-sm text-gray-500">
-                    Koleksi buku yang tersedia di perpustakaan digital.
+                    Menampilkan koleksi buku yang tersedia.
                 </p>
             </div>
 
-            <div class="overflow-x-auto p-6">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
 
-                <table class="w-full min-w-[850px] text-left">
-
-                    <thead style="background: #741d3c; color: white;">
+                    <thead style="background-color: #fff0f4; color: #741d3c;">
                         <tr>
-                            <th class="rounded-l-xl px-4 py-4">No.</th>
-                            <th class="px-4 py-4">Judul Buku</th>
-                            <th class="px-4 py-4">Kategori</th>
-                            <th class="px-4 py-4">Penulis</th>
-                            <th class="px-4 py-4">Tahun Terbit</th>
-                            <th class="rounded-r-xl px-4 py-4">Aksi</th>
+                            <th class="px-4 py-4 font-bold">No</th>
+                            <th class="px-4 py-4 font-bold">Judul</th>
+                            <th class="px-4 py-4 font-bold">Kategori</th>
+                            <th class="px-4 py-4 font-bold">Penulis</th>
+                            <th class="px-4 py-4 font-bold">Tahun Terbit</th>
+                            <th class="px-4 py-4 text-center font-bold">Aksi</th>
                         </tr>
                     </thead>
 
-                    <tbody>
-                        @forelse($buku as $item)
-                            <tr class="border-b border-pink-100 transition hover:bg-pink-50">
+                    <tbody class="divide-y divide-pink-100">
+
+                        @forelse ($buku as $item)
+                            <tr class="transition hover:bg-pink-50">
 
                                 <td class="px-4 py-4">
                                     {{ $buku->firstItem() + $loop->index }}
@@ -122,13 +80,15 @@
                                 <td class="px-4 py-4 font-semibold"
                                     style="color: #741d3c;">
 
-                                    {{-- KODE SEBELUM PERBAIKAN A1 --}}
-                                    {!! $item->judul !!}
+                                    <!-- {{-- SOAL 1 - A1: KODE SEBELUM PERBAIKAN (RENTAN XSS) --}}
+                                    {!! $item->judul !!} -->
 
+                                    {{-- SOAL 1 - A1: KODE SESUDAH PERBAIKAN --}}
+                                    {{ $item->judul }} 
                                 </td>
 
                                 <td class="px-4 py-4">
-                                    {{ $item->kategori->nama ?? '-' }}
+                                    {{ $item->kategori->nama_kategori ?? '-' }}
                                 </td>
 
                                 <td class="px-4 py-4">
@@ -140,33 +100,32 @@
                                 </td>
 
                                 <td class="px-4 py-4">
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex flex-wrap items-center justify-center gap-2">
 
-                                        <!-- Detail -->
+                                        <!-- Tombol Detail -->
                                         <a href="{{ route('buku.show', $item->id) }}"
-                                           class="rounded-lg px-3 py-2 text-xs font-bold text-white"
-                                           style="background: #741d3c;">
+                                           class="rounded-lg px-3 py-2 text-xs font-semibold text-white"
+                                           style="background-color: #a8325a;">
                                             Detail
                                         </a>
 
+                                        {{-- SOAL 3: Tombol edit dan hapus hanya untuk admin dan petugas --}}
                                         @can('kelola-buku')
 
-                                            <!-- Edit -->
                                             <a href="{{ route('buku.edit', $item->id) }}"
-                                               class="rounded-lg px-3 py-2 text-xs font-bold text-white"
-                                               style="background: #a83c60;">
+                                               class="rounded-lg px-3 py-2 text-xs font-semibold text-white"
+                                               style="background-color: #d99a42;">
                                                 Edit
                                             </a>
-
-                                            {{-- KODE SEBELUM PERBAIKAN A3:
-                                            <a href="{{ route('buku.hapus.get', $item->id) }}"
-                                               class="rounded-lg px-3 py-2 text-xs font-bold text-white"
-                                               style="background: #b42335;">
+<!-- 
+                                            {{-- SOAL 1 - A3: KODE SEBELUM PERBAIKAN (RENTAN CSRF) --}}
+                                            {{-- <a href="{{ route('buku.hapus.get', $item->id) }}"
+                                                 class="rounded-lg px-3 py-2 text-xs font-semibold text-white"
+                                                 style="background-color: #dc3545;">
                                                 Hapus
-                                            </a>
-                                            --}}
+                                            </a> --}} -->
 
-                                            <!-- Hapus menggunakan DELETE -->
+                                            {{-- SOAL 1 - A3: KODE SESUDAH PERBAIKAN --}}
                                             <form action="{{ route('buku.destroy', $item->id) }}"
                                                   method="POST"
                                                   onsubmit="return confirm('Yakin ingin menghapus buku ini?')">
@@ -175,8 +134,8 @@
                                                 @method('DELETE')
 
                                                 <button type="submit"
-                                                        class="rounded-lg px-3 py-2 text-xs font-bold text-white"
-                                                        style="background: #b42335;">
+                                                        class="rounded-lg px-3 py-2 text-xs font-semibold text-white"
+                                                        style="background-color: #dc3545;">
                                                     Hapus
                                                 </button>
                                             </form>
@@ -191,28 +150,43 @@
                         @empty
                             <tr>
                                 <td colspan="6"
-                                    class="py-10 text-center text-gray-500">
-                                    Belum ada koleksi buku.
+                                    class="px-4 py-10 text-center text-gray-500">
+                                    Belum ada data buku.
                                 </td>
                             </tr>
                         @endforelse
+
                     </tbody>
-
                 </table>
+            </div>
 
-                <!-- Pagination -->
-                <div class="mt-6">
+            <!-- Pagination -->
+            <div class="flex flex-col items-center justify-between gap-3 border-t px-6 py-5 sm:flex-row"
+                 style="border-color: #f3d5df;">
+
+                <p class="text-sm text-gray-500">
+                    Menampilkan
+                    {{ $buku->firstItem() ?? 0 }}
+                    sampai
+                    {{ $buku->lastItem() ?? 0 }}
+                    dari
+                    {{ $buku->total() }}
+                    buku
+                </p>
+
+                <div>
                     {{ $buku->links() }}
                 </div>
 
             </div>
+
         </div>
 
         <!-- Footer -->
-        <p class="mt-8 text-center text-sm"
-           style="color: #8e294d;">
-            BOOKAVY — Perpustakaan Digital
-        </p>
+        <div class="mt-6 text-center text-sm"
+             style="color: #a8325a;">
+            Bookavy Library
+        </div>
 
     </div>
 </div>
