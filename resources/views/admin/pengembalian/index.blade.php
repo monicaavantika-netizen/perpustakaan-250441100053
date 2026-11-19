@@ -17,13 +17,27 @@
                 </p>
 
                 <h3 class="mt-2 text-xl font-bold" style="color:#741d3c;">
-                    Daftar Buku yang Sudah Dikembalikan
+                    Daftar Pengembalian Buku
                 </h3>
 
                 <p class="mt-2 text-sm text-gray-500">
-                    Menampilkan seluruh riwayat pengembalian buku perpustakaan.
+                    Konfirmasi pengembalian buku yang sedang dipinjam dan pantau riwayat pengembalian.
                 </p>
             </div>
+
+            <!-- Pesan Berhasil -->
+            @if(session('success'))
+                <div class="mb-5 rounded-xl border border-green-200 bg-green-100 p-4 text-sm text-green-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <!-- Pesan Error -->
+            @if(session('error'))
+                <div class="mb-5 rounded-xl border border-red-200 bg-red-100 p-4 text-sm text-red-700">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             <div class="overflow-x-auto rounded-xl border border-gray-200">
                 <table class="w-full border-collapse text-left text-sm">
@@ -34,6 +48,7 @@
                             <th class="px-5 py-4">Buku</th>
                             <th class="px-5 py-4 text-center">Tanggal Kembali</th>
                             <th class="px-5 py-4 text-center">Status</th>
+                            <th class="px-5 py-4 text-center">Aksi</th>
                         </tr>
                     </thead>
 
@@ -57,15 +72,42 @@
                                 </td>
 
                                 <td class="px-5 py-4 text-center">
-                                    <span class="inline-block rounded-lg px-3 py-1 text-xs font-bold"
-                                          style="background:#dcfce7;color:#166534;">
-                                        {{ ucfirst($item->status) }}
-                                    </span>
+                                    @if($item->status === 'dikembalikan')
+                                        <span class="inline-block rounded-lg px-3 py-1 text-xs font-bold"
+                                              style="background:#dcfce7;color:#166534;">
+                                            {{ ucfirst($item->status) }}
+                                        </span>
+                                    @else
+                                        <span class="inline-block rounded-lg px-3 py-1 text-xs font-bold"
+                                              style="background:#fce8ee;color:#741d3c;">
+                                            {{ ucfirst($item->status) }}
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td class="px-5 py-4 text-center">
+                                    @if($item->status === 'disetujui')
+                                        <form action="{{ route('petugas.peminjaman.kembalikan', $item->id) }}"
+                                              method="POST">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <button type="submit"
+                                                    class="rounded-lg px-3 py-2 text-xs font-bold text-white transition hover:opacity-80"
+                                                    style="background:#741d3c;">
+                                                Konfirmasi Kembali
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-xs font-medium text-gray-400">
+                                            Selesai diproses
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5"
+                                <td colspan="6"
                                     class="px-5 py-8 text-center text-gray-500">
                                     Belum ada data pengembalian buku.
                                 </td>
