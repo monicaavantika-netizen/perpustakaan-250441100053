@@ -18,7 +18,10 @@ class PeminjamanController extends Controller
 
         $anggota = Anggota::firstOrCreate(
             ['user_id' => $user->id],
-            ['nama' => $user->name]
+            [
+                'nama' => $user->name,
+                'email' => $user->email,
+            ]
         );
 
         $peminjamans = Peminjaman::with(['anggota', 'buku'])
@@ -41,7 +44,10 @@ class PeminjamanController extends Controller
 
         $anggota = Anggota::firstOrCreate(
             ['user_id' => $user->id],
-            ['nama' => $user->name]
+            [
+                'nama' => $user->name,
+                'email' => $user->email,
+            ]
         );
 
         $validated = $request->validate([
