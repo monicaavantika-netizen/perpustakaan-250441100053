@@ -14,8 +14,12 @@ class PeminjamanController extends Controller
     // Menampilkan peminjaman milik siswa yang login
     public function index()
     {
-        $anggota = Anggota::where('user_id', auth()->id())
-            ->firstOrFail();
+        $user = auth()->user();
+
+        $anggota = Anggota::firstOrCreate(
+            ['user_id' => $user->id],
+            ['nama' => $user->name]
+        );
 
         $peminjamans = Peminjaman::with(['anggota', 'buku'])
             ->where('anggota_id', $anggota->id)
@@ -33,8 +37,12 @@ class PeminjamanController extends Controller
     // Mengajukan peminjaman buku
     public function store(Request $request)
     {
-        $anggota = Anggota::where('user_id', auth()->id())
-            ->firstOrFail();
+        $user = auth()->user();
+
+        $anggota = Anggota::firstOrCreate(
+            ['user_id' => $user->id],
+            ['nama' => $user->name]
+        );
 
         $validated = $request->validate([
             'buku_id' => 'required|exists:bukus,id',
