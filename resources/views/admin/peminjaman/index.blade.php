@@ -21,9 +21,31 @@
                 </h3>
 
                 <p class="mt-2 text-sm text-gray-500">
-                    Menampilkan seluruh data peminjaman buku perpustakaan.
+                    Menampilkan dan mengelola seluruh data peminjaman buku perpustakaan.
                 </p>
             </div>
+
+            <!-- Pesan Berhasil -->
+            @if(session('success'))
+                <div class="mb-5 rounded-xl border border-green-200 bg-green-100 p-4 text-sm text-green-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <!-- Pesan Error -->
+            @if(session('error'))
+                <div class="mb-5 rounded-xl border border-red-200 bg-red-100 p-4 text-sm text-red-700">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-5 rounded-xl border border-red-200 bg-red-100 p-4 text-sm text-red-700">
+                    @foreach($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
 
             <div class="overflow-x-auto rounded-xl border border-gray-200">
                 <table class="w-full border-collapse text-left text-sm">
@@ -35,6 +57,7 @@
                             <th class="px-5 py-4">Buku</th>
                             <th class="px-5 py-4 text-center">Status</th>
                             <th class="px-5 py-4 text-center">Tanggal Kembali</th>
+                            <th class="px-5 py-4 text-center">Aksi</th>
                         </tr>
                     </thead>
 
@@ -65,10 +88,66 @@
                                     {{ $item->tanggal_kembali ?? '-' }}
                                 </td>
 
+                                <td class="px-5 py-4">
+                                    <div class="flex items-center justify-center gap-2">
+
+                                        @if($item->status === 'menunggu')
+
+                                            <form action="{{ route('petugas.peminjaman.updateStatus', $item->id) }}"
+                                                  method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="disetujui">
+
+                                                <button type="submit"
+                                                        class="rounded-lg px-3 py-2 text-xs font-bold text-white transition hover:opacity-80"
+                                                        style="background:#741d3c;">
+                                                    Setujui
+                                                </button>
+                                            </form>
+
+                                            <form action="{{ route('petugas.peminjaman.updateStatus', $item->id) }}"
+                                                  method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="ditolak">
+
+                                                <button type="submit"
+                                                        class="rounded-lg px-3 py-2 text-xs font-bold text-white transition hover:opacity-80"
+                                                        style="background:#a83c60;">
+                                                    Tolak
+                                                </button>
+                                            </form>
+
+                                        @elseif($item->status === 'disetujui')
+
+                                            <form action="{{ route('petugas.peminjaman.kembalikan', $item->id) }}"
+                                                  method="POST">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <button type="submit"
+                                                        class="rounded-lg px-3 py-2 text-xs font-bold text-white transition hover:opacity-80"
+                                                        style="background:#741d3c;">
+                                                    Konfirmasi Kembali
+                                                </button>
+                                            </form>
+
+                                        @else
+
+                                            <span class="text-xs font-medium text-gray-400">
+                                                Selesai diproses
+                                            </span>
+
+                                        @endif
+
+                                    </div>
+                                </td>
+
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-5 py-8 text-center text-gray-500">
+                                <td colspan="6" class="px-5 py-8 text-center text-gray-500">
                                     Belum ada data peminjaman buku.
                                 </td>
                             </tr>

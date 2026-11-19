@@ -77,6 +77,20 @@ Route::middleware(['auth', 'role:petugas'])
             'index'
         ])->name('peminjaman.index');
 
+        // Laporan Petugas
+        Route::get('/laporan', [
+            \App\Http\Controllers\Admin\LaporanController::class,
+            'index'
+        ])->name('laporan.index');
+    });
+
+
+// Aksi Kelola Peminjaman (Admin & Petugas)
+Route::middleware(['auth', 'role:admin|petugas'])
+    ->prefix('petugas')
+    ->name('petugas.')
+    ->group(function () {
+
         Route::patch('/peminjaman/{peminjaman}/status', [
             \App\Http\Controllers\Petugas\PeminjamanController::class,
             'updateStatus'
@@ -86,12 +100,6 @@ Route::middleware(['auth', 'role:petugas'])
             \App\Http\Controllers\Petugas\PeminjamanController::class,
             'kembalikan'
         ])->name('peminjaman.kembalikan');
-
-        // Laporan Petugas
-        Route::get('/laporan', [
-            \App\Http\Controllers\Admin\LaporanController::class,
-            'index'
-        ])->name('laporan.index');
     });
 
 
