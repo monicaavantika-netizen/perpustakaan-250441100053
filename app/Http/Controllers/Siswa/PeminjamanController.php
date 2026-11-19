@@ -21,6 +21,7 @@ class PeminjamanController extends Controller
             [
                 'nama' => $user->name,
                 'email' => $user->email,
+                'no_telepon' => '-',
             ]
         );
 
@@ -47,6 +48,7 @@ class PeminjamanController extends Controller
             [
                 'nama' => $user->name,
                 'email' => $user->email,
+                'no_telepon' => '-',
             ]
         );
 
