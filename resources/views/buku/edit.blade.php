@@ -1,4 +1,4 @@
- @extends('layouts.bookavy')
+@extends('layouts.bookavy')
 
 @section('title', 'Bookavy - Ubah Buku')
 
@@ -266,12 +266,19 @@
     async function ambilBuku() {
         try {
             const response = await fetch(apiUrl, {
+                credentials: 'same-origin',
                 headers: {
                     'Accept': 'application/json'
                 }
             });
 
-            const hasil = await response.json();
+            const text = await response.text();
+            let hasil;
+            try {
+                hasil = JSON.parse(text);
+            } catch {
+                throw new Error('Server membalas HTML saat ambil data (Status ' + response.status + ').');
+            }
 
             if (!response.ok) {
                 throw new Error(hasil.message || 'Buku tidak ditemukan.');
@@ -280,7 +287,7 @@
             const buku = hasil.data || hasil;
 
             document.getElementById('kategori_id').value = buku.kategori_id;
-            document.getElementById('judul').value = buku.judul_buku;
+            document.getElementById('judul').value = buku.judul_buku ?? buku.judul ?? '';
             document.getElementById('penulis').value = buku.penulis;
             document.getElementById('tahun_terbit').value = buku.tahun_terbit;
 
@@ -308,14 +315,22 @@
         try {
             const response = await fetch(apiUrl, {
                 method: 'PUT',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify(dataBuku)
             });
 
-            const hasil = await response.json();
+            const text = await response.text();
+            let hasil;
+            try {
+                hasil = JSON.parse(text);
+            } catch {
+                throw new Error('Server membalas HTML saat simpan (Status ' + response.status + '). Cek routes/api.php atau Logs Vercel.');
+            }
 
             if (!response.ok) {
                 const error = hasil.errors

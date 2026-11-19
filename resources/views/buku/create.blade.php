@@ -62,14 +62,12 @@
                             required>
 
                         <option value="">Pilih Kategori</option>
-
                         @foreach ($kategori as $item)
-                            <option value="{{ $item->id }}"
-                                {{ old('kategori_id') == $item->id ? 'selected' : '' }}>
-                                {{ $item->nama_kategori }}
-                            </option>
-                        @endforeach
-
+                        <option value="{{ $item->id }}"
+                        {{ old('kategori_id') == $item->id ? 'selected' : '' }}>
+                        {{ $item->nama_kategori ?? $item->nama ?? $item->name }}
+                    </option>
+                    @endforeach
                     </select>
                 </div>
 
