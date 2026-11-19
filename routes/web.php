@@ -206,14 +206,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 });
-
+Route::get('/tes-laravel', function () {
+    return 'Laravel Bookavy berhasil berjalan di Vercel!';
+});
 
 // SOAL 5a: PENGUJIAN APP_DEBUG=false
 // Route sementara hanya untuk pengujian.
 // Setelah diuji, route harus dihapus atau dikomentari.
-Route::get('/uji-error', function () {
-    throw new RuntimeException('Pengujian error aplikasi');
-});
+// Route::get('/uji-error', function () {
+//     throw new RuntimeException('Pengujian error aplikasi');
+// });
 
 // SOAL 5c: PENGGANTIAN PASSWORD ADMIN
 // Perintah dijalankan melalui php artisan tinker,
