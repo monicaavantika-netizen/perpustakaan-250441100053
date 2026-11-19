@@ -77,7 +77,8 @@
         margin-bottom: 9px;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group select {
         width: 100%;
         padding: 13px 15px;
         border: 1px solid #edcbd7;
@@ -88,7 +89,8 @@
         transition: 0.2s;
     }
 
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
         border-color: #a83c60;
         box-shadow: 0 0 0 3px rgba(168, 60, 96, 0.12);
     }
@@ -129,27 +131,14 @@
         transform: translateY(-2px);
     }
 
-    .btn-save:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
     .form-message {
-        display: none;
         padding: 14px 16px;
         margin-bottom: 20px;
         border-radius: 12px;
         font-size: 14px;
     }
 
-    .form-message.success {
-        display: block;
-        color: #166534;
-        background: #dcfce7;
-    }
-
     .form-message.error {
-        display: block;
         color: #991b1b;
         background: #fee2e2;
     }
@@ -159,20 +148,6 @@
         text-align: center;
         color: #8e294d;
         font-size: 13px;
-    }
-
-    @media (max-width: 600px) {
-        .edit-banner {
-            padding: 25px;
-        }
-
-        .edit-banner h1 {
-            font-size: 25px;
-        }
-
-        .edit-card {
-            padding: 22px;
-        }
     }
 </style>
 
@@ -188,40 +163,53 @@
             </div>
         </div>
 
-        <!-- Pesan -->
-        <div id="pesan" class="form-message"></div>
+        <!-- Pesan Validasi -->
+        @if ($errors->any())
+            <div class="form-message error">
+                <ul style="margin: 0; padding-left: 18px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <!-- Form -->
         <div class="edit-card">
-
             <h2>Informasi Buku</h2>
             <p class="edit-subtitle">
                 Silakan periksa dan ubah informasi buku di bawah ini.
             </p>
 
-            <form id="formBuku">
+            <form action="{{ route('buku.update', $buku->id) }}" method="POST">
+                @csrf
+                @method('PUT')
 
                 <div class="form-group">
                     <label for="kategori_id">ID Kategori</label>
-                    <input type="number" id="kategori_id"
+                    <input type="number" name="kategori_id" id="kategori_id"
+                           value="{{ old('kategori_id', $buku->kategori_id) }}"
                            placeholder="Masukkan ID kategori" required>
                 </div>
 
                 <div class="form-group">
                     <label for="judul">Judul Buku</label>
-                    <input type="text" id="judul"
+                    <input type="text" name="judul" id="judul"
+                           value="{{ old('judul', $buku->judul_buku ?? $buku->judul) }}"
                            placeholder="Masukkan judul buku" required>
                 </div>
 
                 <div class="form-group">
                     <label for="penulis">Penulis</label>
-                    <input type="text" id="penulis"
+                    <input type="text" name="penulis" id="penulis"
+                           value="{{ old('penulis', $buku->penulis) }}"
                            placeholder="Masukkan nama penulis" required>
                 </div>
 
                 <div class="form-group">
                     <label for="tahun_terbit">Tahun Terbit</label>
-                    <input type="number" id="tahun_terbit"
+                    <input type="number" name="tahun_terbit" id="tahun_terbit"
+                           value="{{ old('tahun_terbit', $buku->tahun_terbit) }}"
                            placeholder="Masukkan tahun terbit" required>
                 </div>
 
@@ -234,7 +222,6 @@
                         Kembali
                     </a>
                 </div>
-
             </form>
         </div>
 
@@ -244,116 +231,5 @@
 
     </div>
 </section>
-
-<script>
-    // Mengambil ID buku dari URL
-    const idBuku = window.location.pathname
-        .split('/')
-        .filter(Boolean)
-        .slice(-2, -1)[0];
-
-    const apiUrl = '/api/buku/' + encodeURIComponent(idBuku);
-
-    const form = document.getElementById('formBuku');
-    const pesan = document.getElementById('pesan');
-
-    function tampilkanPesan(teks, jenis) {
-        pesan.textContent = teks;
-        pesan.className = 'form-message ' + jenis;
-    }
-
-    // Mengambil data buku berdasarkan ID
-    async function ambilBuku() {
-        try {
-            const response = await fetch(apiUrl, {
-                credentials: 'same-origin',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            const text = await response.text();
-            let hasil;
-            try {
-                hasil = JSON.parse(text);
-            } catch {
-                throw new Error('Server membalas HTML saat ambil data (Status ' + response.status + ').');
-            }
-
-            if (!response.ok) {
-                throw new Error(hasil.message || 'Buku tidak ditemukan.');
-            }
-
-            const buku = hasil.data || hasil;
-
-            document.getElementById('kategori_id').value = buku.kategori_id;
-            document.getElementById('judul').value = buku.judul_buku ?? buku.judul ?? '';
-            document.getElementById('penulis').value = buku.penulis;
-            document.getElementById('tahun_terbit').value = buku.tahun_terbit;
-
-        } catch (error) {
-            tampilkanPesan(error.message, 'error');
-            form.querySelector('button[type="submit"]').disabled = true;
-        }
-    }
-
-    // Memperbarui data buku
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const dataBuku = {
-            kategori_id: document.getElementById('kategori_id').value,
-            judul: document.getElementById('judul').value,
-            penulis: document.getElementById('penulis').value,
-            tahun_terbit: document.getElementById('tahun_terbit').value
-        };
-
-        const tombol = form.querySelector('button[type="submit"]');
-        tombol.disabled = true;
-        tombol.textContent = 'Menyimpan...';
-
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'PUT',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify(dataBuku)
-            });
-
-            const text = await response.text();
-            let hasil;
-            try {
-                hasil = JSON.parse(text);
-            } catch {
-                throw new Error('Server membalas HTML saat simpan (Status ' + response.status + '). Cek routes/api.php atau Logs Vercel.');
-            }
-
-            if (!response.ok) {
-                const error = hasil.errors
-                    ? Object.values(hasil.errors).flat().join(' ')
-                    : hasil.message || 'Gagal memperbarui buku.';
-
-                throw new Error(error);
-            }
-
-            tampilkanPesan('Buku berhasil diperbarui.', 'success');
-
-            setTimeout(() => {
-                window.location.href = "{{ route('buku.index') }}";
-            }, 1000);
-
-        } catch (error) {
-            tampilkanPesan(error.message, 'error');
-            tombol.disabled = false;
-            tombol.textContent = 'Simpan Perubahan';
-        }
-    });
-
-    ambilBuku();
-</script>
 
 @endsection
