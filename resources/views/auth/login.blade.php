@@ -1,4 +1,12 @@
+
 <x-guest-layout>
+    <!-- Judul Login dan NIM (Soal 5) -->
+    <div class="mb-4 text-center">
+        <h1 class="text-xl font-bold text-gray-800">
+            Bookavy - 250441100053
+        </h1>
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
