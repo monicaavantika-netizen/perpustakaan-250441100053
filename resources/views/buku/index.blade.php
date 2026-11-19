@@ -84,11 +84,11 @@
                                     {!! $item->judul !!} -->
 
                                     {{-- SOAL 1 - A1: KODE SESUDAH PERBAIKAN --}}
-                                    {{ $item->judul }} 
+                                    {{ $item->judul }}
                                 </td>
 
                                 <td class="px-4 py-4">
-                                    {{ $item->kategori->nama_kategori ?? '-' }}
+                                    {{ $item->kategori->nama_kategori ?? $item->kategori->nama ?? $item->kategori->name ?? '-' }}
                                 </td>
 
                                 <td class="px-4 py-4">
@@ -117,7 +117,7 @@
                                                style="background-color: #d99a42;">
                                                 Edit
                                             </a>
-<!-- 
+<!--
                                             {{-- SOAL 1 - A3: KODE SEBELUM PERBAIKAN (RENTAN CSRF) --}}
                                             {{-- <a href="{{ route('buku.hapus.get', $item->id) }}"
                                                  class="rounded-lg px-3 py-2 text-xs font-semibold text-white"
